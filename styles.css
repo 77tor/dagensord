@@ -665,7 +665,7 @@ body.mindmap-open{overflow:hidden}
   padding:0 clamp(16px,3vw,38px); background:#ffffffd9; border-bottom:1px solid #e6defb;
 }
 .word-brand {font-size:clamp(20px,2vw,27px);font-weight:900;color:#51408d;display:flex;align-items:center;gap:10px}
-.word-brand span {font-size:30px}
+.word-brand-icon {width:34px;height:34px;display:block;flex:0 0 34px;border-radius:9px;object-fit:contain}
 .hamburger-button {
   width:46px;height:46px;border:0;border-radius:14px;background:#5c45a4;color:white;
   font-size:25px;cursor:pointer;box-shadow:0 4px 0 #3f2d7d;
@@ -6566,4 +6566,426 @@ body.mindmap-open main{
     min-width:128px!important;
     padding:8px 6px!important;
   }
+}
+
+
+/* v92 – mer avlang midtring i vanlig tankekartvisning */
+#wordMindmap .mindmap-board:not(.task-focus-mode) .mind-node.node-center{
+  aspect-ratio:2.05 / 1!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:clamp(6px,1.1cqh,14px)!important;
+}
+
+
+/* v93 – flytt overskrift og dagens ord opp i den flatere midtringen */
+#wordMindmap .mindmap-board:not(.task-focus-mode) .mind-node.node-center::before{
+  top:7px!important;
+}
+#wordMindmap .mindmap-board:not(.task-focus-mode) .mind-node.node-center::after{
+  top:29px!important;
+}
+#wordMindmap .mindmap-board:not(.task-focus-mode) .node-center .mindmap-word-display{
+  padding:27px 8px 4px!important;
+  align-items:center!important;
+  transform:translateY(-5px)!important;
+  line-height:.95!important;
+}
+
+
+/* v94 – flytt dagens ord et lite hakk ned i vanlig tankekartvisning */
+#wordMindmap .mindmap-board:not(.task-focus-mode) .node-center .mindmap-word-display{
+  transform:translateY(-1px)!important;
+}
+
+
+/* v95 – flytt dagens ord litt lenger ned i vanlig tankekartvisning */
+#wordMindmap .mindmap-board:not(.task-focus-mode) .node-center .mindmap-word-display{
+  transform:translateY(3px)!important;
+}
+
+
+/* v96 – tydeligere overskrifter i oppgaveboksene på tankekartet */
+#wordMindmap .mind-node:not(.node-center) h2{
+  font-size:clamp(15px,1.45vw,23px)!important;
+  line-height:1.2!important;
+  font-weight:900!important;
+  letter-spacing:.01em!important;
+}
+@media(max-width:850px){
+  #wordMindmap .mind-node:not(.node-center) h2{
+    font-size:clamp(13px,1.8vw,18px)!important;
+  }
+}
+@media(max-width:520px){
+  #wordMindmap .mind-node:not(.node-center) h2{
+    font-size:13px!important;
+  }
+}
+
+
+/* v97 – ledetekster plasseres inne i skrivefeltene */
+#wordMindmap .node-letters .mini-writing-task,
+#wordMindmap .node-vowel .mini-writing-task{
+  position:relative!important;
+  display:flex!important;
+  min-height:0!important;
+}
+#wordMindmap .node-letters .ink-label,
+#wordMindmap .node-vowel .ink-label{
+  position:absolute!important;
+  z-index:2!important;
+  top:10px!important;
+  left:13px!important;
+  margin:0!important;
+  padding:0!important;
+  color:#9aa3b3!important;
+  font-size:clamp(15px,1.25vw,20px)!important;
+  line-height:1.15!important;
+  font-weight:600!important;
+  pointer-events:none!important;
+}
+#wordMindmap .node-letters .ink-canvas,
+#wordMindmap .node-vowel .ink-canvas{
+  position:relative!important;
+  flex:1 1 0!important;
+  width:100%!important;
+  min-height:58px!important;
+  height:auto!important;
+}
+@media(max-width:700px){
+  #wordMindmap .node-letters .ink-label,
+  #wordMindmap .node-vowel .ink-label{
+    top:8px!important;
+    left:10px!important;
+    font-size:clamp(13px,2vw,16px)!important;
+  }
+}
+
+
+/* v113 – samlet, ryddig oppsett for «Bokstaver og stavelser» og «Vokaler og konsonanter» */
+/* Begge kortene bruker samme struktur: én overskriftsrad og to like skrivefelt side ved side. */
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables,
+#wordMindmap #mindmapBoard > .mind-node.node-letters {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  grid-auto-flow: row !important;
+  align-items: stretch !important;
+  align-content: stretch !important;
+  justify-content: stretch !important;
+  gap: clamp(8px, .8vw, 14px) !important;
+  min-width: 0 !important;
+  min-height: 220px !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables > .node-heading,
+#wordMindmap #mindmapBoard > .mind-node.node-letters > .node-heading {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: clamp(9px, .8vw, 14px) !important;
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 1.4em !important;
+  margin: 0 !important;
+  padding: 0 115px 0 0 !important;
+  box-sizing: border-box !important;
+  order: initial !important;
+}
+
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables > .node-heading > .node-icon,
+#wordMindmap #mindmapBoard > .mind-node.node-letters > .node-heading > .node-icon {
+  display: inline-flex !important;
+  position: static !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+}
+
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables > .node-heading > h2,
+#wordMindmap #mindmapBoard > .mind-node.node-letters > .node-heading > h2 {
+  display: block !important;
+  position: static !important;
+  flex: 0 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  text-indent: 0 !important;
+  line-height: 1.2 !important;
+  white-space: normal !important;
+}
+
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables > .mini-writing-task,
+#wordMindmap #mindmapBoard > .mind-node.node-letters > .mini-writing-task {
+  grid-row: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  gap: 0 !important;
+}
+
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables > .mini-writing-task:nth-child(4),
+#wordMindmap #mindmapBoard > .mind-node.node-letters > .mini-writing-task:nth-child(4) {
+  grid-column: 1 !important;
+}
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables > .mini-writing-task:nth-child(5),
+#wordMindmap #mindmapBoard > .mind-node.node-letters > .mini-writing-task:nth-child(5) {
+  grid-column: 2 !important;
+}
+
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables .mini-writing-task > .ink-label,
+#wordMindmap #mindmapBoard > .mind-node.node-letters .mini-writing-task > .ink-label {
+  position: absolute !important;
+  z-index: 2 !important;
+  top: clamp(10px, 1vw, 16px) !important;
+  left: clamp(12px, 1.2vw, 18px) !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: clamp(15px, 1.25vw, 20px) !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+  pointer-events: none !important;
+}
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables .mini-writing-task > .ink-label {
+  color: #9aa3b3 !important;
+}
+#wordMindmap #mindmapBoard > .mind-node.node-letters .mini-writing-task:nth-child(4) > .ink-label {
+  color: #d94b4b !important;
+}
+#wordMindmap #mindmapBoard > .mind-node.node-letters .mini-writing-task:nth-child(5) > .ink-label {
+  color: #2878c7 !important;
+}
+
+#wordMindmap #mindmapBoard > .mind-node.node-count-syllables .mini-writing-task > .ink-canvas,
+#wordMindmap #mindmapBoard > .mind-node.node-letters .mini-writing-task > .ink-canvas {
+  display: block !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+}
+#wordMindmap #mindmapBoard > .mind-node.node-letters > .node-help {
+  display: none !important;
+}
+
+/* I fokusvisning fyller kortet hele tilgjengelige flate, med samme todelte layout. */
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-count-syllables,
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-letters {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  grid-template-rows: auto minmax(0, 1fr) !important;
+  width: min(100%, 1100px) !important;
+  height: min(58cqh, 520px) !important;
+  min-height: clamp(190px, 34cqh, 330px) !important;
+  max-height: 100% !important;
+  padding: clamp(18px, 2.2cqh, 30px) !important;
+  gap: clamp(10px, 1.2vw, 18px) !important;
+  border-radius: clamp(22px, 3cqh, 36px) !important;
+}
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-count-syllables > .node-heading,
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-letters > .node-heading {
+  min-height: clamp(38px, 4cqh, 54px) !important;
+  padding-right: 190px !important;
+}
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-count-syllables > .node-heading > .node-icon,
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-letters > .node-heading > .node-icon {
+  font-size: clamp(30px, 3.2cqh, 48px) !important;
+}
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-count-syllables > .node-heading > h2,
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-letters > .node-heading > h2 {
+  font-size: clamp(20px, 2.3cqh, 34px) !important;
+}
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-count-syllables > .mini-writing-task,
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-letters > .mini-writing-task {
+  min-height: 0 !important;
+}
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-count-syllables .mini-writing-task > .ink-label,
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-letters .mini-writing-task > .ink-label {
+  font-size: clamp(17px, 1.5vw, 23px) !important;
+}
+
+@media (max-width: 700px) {
+  #wordMindmap #mindmapBoard > .mind-node.node-count-syllables,
+  #wordMindmap #mindmapBoard > .mind-node.node-letters {
+    gap: 7px !important;
+    padding: 12px !important;
+  }
+  #wordMindmap #mindmapBoard > .mind-node.node-count-syllables > .node-heading,
+  #wordMindmap #mindmapBoard > .mind-node.node-letters > .node-heading {
+    padding-right: 88px !important;
+    gap: 7px !important;
+  }
+  #wordMindmap #mindmapBoard > .mind-node.node-count-syllables > .mini-writing-task > .ink-label,
+  #wordMindmap #mindmapBoard > .mind-node.node-letters > .mini-writing-task > .ink-label {
+    top: 8px !important;
+    left: 9px !important;
+    font-size: clamp(12px, 2vw, 16px) !important;
+  }
+  #wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-count-syllables > .node-heading,
+  #wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused.node-letters > .node-heading {
+    padding-right: 145px !important;
+  }
+}
+
+/* v114 – større, tydeligere knapper med mindre avstand i fokusvisning */
+#wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .clear-node-button,
+#wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .save-close-node-button {
+  min-height: 34px !important;
+  box-sizing: border-box !important;
+  padding: 7px 12px !important;
+  border-width: 1.5px !important;
+  border-radius: 9px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  opacity: 1 !important;
+  box-shadow: 0 2px 7px rgba(42, 48, 76, .16) !important;
+  white-space: nowrap !important;
+}
+
+#wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .clear-node-button {
+  right: 102px !important;
+  gap: 6px !important;
+  background: #ffffff !important;
+  color: #40516d !important;
+  border-color: #91a3c2 !important;
+}
+
+#wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .save-close-node-button {
+  right: 10px !important;
+  background: linear-gradient(135deg, #7655c8, #9274df) !important;
+  color: #ffffff !important;
+  border-color: #7655c8 !important;
+}
+
+#wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .clear-node-button:hover,
+#wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .save-close-node-button:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 9px rgba(42, 48, 76, .22) !important;
+}
+
+@media (max-width: 700px) {
+  #wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .clear-node-button,
+  #wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .save-close-node-button {
+    min-height: 32px !important;
+    padding: 6px 9px !important;
+    font-size: 11px !important;
+  }
+
+  #wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .clear-node-button {
+    right: 96px !important;
+  }
+
+  #wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .save-close-node-button {
+    right: 8px !important;
+  }
+}
+
+
+/* v115 – bredere venstremeny og fullstendig skjuling ved hamburgerklikk */
+#wordMindmap:not(.sidebar-collapsed) .mindmap-sidebar {
+  flex: 0 0 clamp(190px, 20vw, 225px) !important;
+  width: clamp(190px, 20vw, 225px) !important;
+  min-width: clamp(190px, 20vw, 225px) !important;
+  max-width: clamp(190px, 20vw, 225px) !important;
+  box-sizing: border-box !important;
+}
+
+#wordMindmap.sidebar-collapsed .mindmap-sidebar {
+  display: none !important;
+  flex: 0 0 0 !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  max-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+#wordMindmap.sidebar-collapsed .sidebar-toggle {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: absolute !important;
+  left: 12px !important;
+  top: 12px !important;
+  width: 40px !important;
+  height: 40px !important;
+  background: #ffffff !important;
+  color: #55418f !important;
+  box-shadow: 0 3px 12px #30245c25 !important;
+  z-index: 30 !important;
+}
+
+#wordMindmap:not(.sidebar-collapsed) .sidebar-toggle {
+  left: 170px !important;
+  top: 16px !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 30 !important;
+}
+
+@media (max-width: 850px) {
+  #wordMindmap:not(.sidebar-collapsed) .mindmap-sidebar {
+    flex-basis: 175px !important;
+    width: 175px !important;
+    min-width: 175px !important;
+    max-width: 175px !important;
+  }
+  #wordMindmap:not(.sidebar-collapsed) .sidebar-toggle {
+    left: 137px !important;
+  }
+}
+
+@media (max-width: 620px) {
+  #wordMindmap:not(.sidebar-collapsed) .mindmap-sidebar {
+    flex-basis: 145px !important;
+    width: 145px !important;
+    min-width: 145px !important;
+    max-width: 145px !important;
+  }
+  #wordMindmap:not(.sidebar-collapsed) .sidebar-toggle {
+    left: 108px !important;
+  }
+}
+
+
+/* v116 – større overskrifter i fokusvisningen for alle oppgavebokser */
+#wordMindmap #mindmapBoard.task-focus-mode > .mind-node.is-focused h2 {
+  font-size: clamp(25px, 2.8cqh, 36px) !important;
+  line-height: 1.2 !important;
+  font-weight: 900 !important;
 }

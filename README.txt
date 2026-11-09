@@ -20,3 +20,10 @@ VERSJON 75 – ENDRINGER
 - Dagens ord i midten av tankekartet er nå skrivebeskyttet.
 - Dagens ord velges og endres fra lærerens meny på forsiden.
 - Ordsøk og tankekart tar utgangspunkt i ordet som er valgt av læreren.
+
+VERSJON 113 – TANKekart
+- Ryddet opp i motstridende CSS-regler for «Bokstaver og stavelser» og «Vokaler og konsonanter».
+- Begge kortene bruker nå samme overskriftsrad med ikon og tittel på én linje.
+- Begge kortene har to like store skrivefelt ved siden av hverandre.
+- Skrivefeltene fyller tilgjengelig høyde, også i fokusvisning.
+- Øvrige oppgavekort og funksjoner er ikke tilsiktet endret.
