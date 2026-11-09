@@ -7018,3 +7018,22 @@ body.mindmap-open main{
   padding: 9px 14px;
   font-size: 0.9rem;
 }
+
+
+/* v121 – de to todelte oppgavekortene må følge høyden på grid-raden.
+   Tidligere min-height:220px gjorde at de stakk ned i raden under på mindre skjermer. */
+#wordMindmap #mindmapBoard:not(.task-focus-mode) > .mind-node.node-count-syllables,
+#wordMindmap #mindmapBoard:not(.task-focus-mode) > .mind-node.node-letters {
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  align-self: stretch !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 900px) {
+  #wordMindmap #mindmapBoard:not(.task-focus-mode) > .mind-node.node-count-syllables,
+  #wordMindmap #mindmapBoard:not(.task-focus-mode) > .mind-node.node-letters {
+    min-height: 0 !important;
+  }
+}
