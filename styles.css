@@ -6535,3 +6535,35 @@ body.mindmap-open main{
     font-size:9px!important;
   }
 }
+
+
+/* v91 – litt bredere venstremeny i tankekartet */
+#wordMindmap .mindmap-sidebar{
+  flex:0 0 clamp(170px,18vw,215px)!important;
+  width:clamp(170px,18vw,215px)!important;
+  min-width:clamp(170px,18vw,215px)!important;
+  padding-left:clamp(9px,1vw,14px)!important;
+  padding-right:clamp(9px,1vw,14px)!important;
+}
+#wordMindmap .mindmap-sidebar .sidebar-action,
+#wordMindmap .mindmap-sidebar button{
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:850px){
+  #wordMindmap .mindmap-sidebar{
+    flex-basis:clamp(145px,22vw,175px)!important;
+    width:clamp(145px,22vw,175px)!important;
+    min-width:clamp(145px,22vw,175px)!important;
+    padding-left:8px!important;
+    padding-right:8px!important;
+  }
+}
+@media(max-width:620px){
+  #wordMindmap .mindmap-sidebar{
+    flex-basis:128px!important;
+    width:128px!important;
+    min-width:128px!important;
+    padding:8px 6px!important;
+  }
+}
