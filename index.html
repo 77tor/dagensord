@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1ff">
+  <title>Dagens ord</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="daily-word-site">
+  <header class="word-topbar">
+    <div class="word-brand"><span>🌈</span> Dagens ord</div>
+    <button class="hamburger-button" id="openTeacherMenu" aria-label="Lærerinnstillinger" title="Lærerinnstillinger">☰</button>
+  </header>
+
+  <main>
+    <section id="slotHome" class="slot-home">
+      <div class="slot-machine-wrap">
+        <div class="slot-machine">
+          <div class="slot-machine-top" aria-label="Dagens ord!">
+            <span class="slot-title-plaque">Dagens ord!</span>
+          </div>
+          <div class="slot-window" id="slotResult" aria-label="Bokstavhjulene i dagens ord">
+            <div class="slot-reels" id="slotReels">
+              <div class="slot-empty">Trekk i spaken for å starte!</div>
+            </div>
+            <div class="slot-reading-guide" aria-hidden="true"></div>
+          </div>
+          <div class="slot-machine-bottom">
+            <span class="slot-star">✨</span>
+            <span class="slot-ready" id="slotMessage">Trekk i spaken!</span>
+            <span class="slot-star">✨</span>
+          </div>
+        </div>
+      <div class="word-reveal-overlay hidden" id="wordRevealOverlay" aria-live="polite">
+        <button class="word-reveal-card" id="wordRevealCard" type="button" aria-label="Til dagens bokstav">
+          <span class="word-reveal-action">Til dagens bokstav! →</span>
+        </button>
+      </div>
+        <div class="slot-lever-area">
+          <div class="lever-post"></div>
+          <button class="slot-lever" id="pullLever" aria-label="Trekk i spaken" title="Trekk i spaken">
+            <span class="lever-ball"></span>
+            <span class="lever-handle"></span>
+          </button>
+          <span class="lever-caption">DRA I SPAKEN</span>
+        </div>
+      </div>
+
+
+      <button class="explore-word-button" id="exploreWord" disabled>
+        ✨ Utforsk ordet <span>→</span>
+      </button>
+      <p class="slot-hint">Når hjulene har stoppet, kan du klikke på ordet!</p>
+    </section>
+
+    <section id="wordMindmap" class="word-mindmap hidden" aria-label="Tankekart for dagens ord">
+      <button class="sidebar-toggle" id="toggleMindmapSidebar" aria-label="Skjul meny" title="Skjul eller vis meny">☰</button>
+      <aside class="mindmap-sidebar" id="mindmapSidebar">
+        <div class="sidebar-brand">🧠 <span>Tankekart</span></div>
+        <button class="sidebar-action" id="openSearchModule">🔎 <span>Ordsøk</span></button>
+        <button class="sidebar-action" id="clearMindmap">↻ <span>Tøm tavla</span></button>
+        <button class="sidebar-action archive-save-action" id="saveMindmapPage">💾 <span>Lagre siden</span></button>
+        <button class="sidebar-action" id="openWordArchive">📚 <span>Tidligere dagens ord</span></button>
+        <details class="sidebar-tools" id="sidebarTools" open>
+          <summary><span class="tools-summary-icon">✍️</span><span>Skriveverktøy</span><span class="tools-chevron">⌄</span></summary>
+          <div class="drawing-toolbar" id="drawingToolbar" aria-label="Skriveverktøy">
+            <div class="sidebar-tool-group"><span class="drawing-toolbar-label">Farge</span><div class="sidebar-color-row">
+              <button type="button" class="ink-color active" data-color="#202124" style="--swatch:#202124" aria-label="Sort" title="Sort"></button>
+              <button type="button" class="ink-color" data-color="#e53935" style="--swatch:#e53935" aria-label="Rød" title="Rød"></button>
+              <button type="button" class="ink-color" data-color="#1976d2" style="--swatch:#1976d2" aria-label="Blå" title="Blå"></button>
+              <button type="button" class="ink-color" data-color="#f2c500" style="--swatch:#f2c500" aria-label="Gul" title="Gul"></button>
+              <button type="button" class="ink-color" data-color="#269b55" style="--swatch:#269b55" aria-label="Grønn" title="Grønn"></button>
+            </div></div>
+            <div class="sidebar-tool-group"><span class="drawing-toolbar-label">Tykkelse</span><div class="sidebar-width-row">
+              <button type="button" class="ink-width active" data-width="3"><span class="width-preview thin"></span>Tynn</button>
+              <button type="button" class="ink-width" data-width="6"><span class="width-preview medium"></span>Middels</button>
+              <button type="button" class="ink-width" data-width="10"><span class="width-preview thick"></span>Tykk</button>
+            </div></div>
+            <div class="sidebar-tool-group"><span class="drawing-toolbar-label">Figurer</span><div class="sidebar-shape-grid">
+              <button type="button" class="ink-shape active" data-shape="free" title="Frihånd">✍️</button>
+              <button type="button" class="ink-shape" data-shape="quad" title="Firkant">□</button>
+              <button type="button" class="ink-shape" data-shape="isosceles" title="Likebeint trekant">△</button>
+              <button type="button" class="ink-shape" data-shape="rightTriangle" title="Rettvinklet trekant">◿</button>
+              <button type="button" class="ink-shape" data-shape="circle" title="Sirkel">○</button>
+            </div></div>
+            <div class="sidebar-tool-group eraser-size-group">
+              <button type="button" class="ink-eraser" id="inkEraser" title="Slett ved å tegne over">🧽 <span>Svamp / viskelær</span></button>
+              <span class="drawing-toolbar-label">Bredde på svamp</span>
+              <div class="sidebar-width-row eraser-width-row">
+                <button type="button" class="eraser-width" data-eraser-width="14">Liten</button>
+                <button type="button" class="eraser-width active" data-eraser-width="28">Middels</button>
+                <button type="button" class="eraser-width" data-eraser-width="48">Stor</button>
+              </div>
+            </div>
+          </div>
+        </details>
+        <div class="sidebar-spacer"></div>
+        <button class="sidebar-action sidebar-exit" id="backToSlot">← <span>Til slot-maskinen</span></button>
+      </aside>
+      <main class="mindmap-main">
+        <button class="focus-exit-button" id="exitTaskFocus" type="button">← Til hele tankekartet</button>
+        <div class="mindmap-board" id="mindmapBoard">
+          <article class="mind-node node-count-syllables"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button>
+            <span class="node-icon">🔤👏</span><h2>Bokstaver og stavelser</h2>
+            <div class="mini-writing-task"><span class="ink-label">Hvor mange bokstaver?</span><canvas class="ink-canvas" aria-label="Skrivefelt: antall bokstaver"></canvas></div>
+            <div class="mini-writing-task"><span class="ink-label">Hvor mange stavelser?</span><canvas class="ink-canvas" aria-label="Skrivefelt: antall stavelser"></canvas></div>
+          </article>
+          <article class="mind-node node-vowel"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><span class="node-icon">🎵</span><h2>Kort eller lang vokallyd?</h2><canvas class="ink-canvas" aria-label="Skrivefelt: vokallyd"></canvas></article>
+          <article class="mind-node node-center"><div id="mindmapCenterWord" class="mindmap-word-display" role="heading" aria-level="2" aria-label="Dagens ord"></div></article>
+          <article class="mind-node node-letters"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><span class="node-icon">🟠🔵</span><h2>Vokaler og konsonanter</h2><p class="node-help">Skriv bokstavene i riktig gruppe.</p><div class="ink-label">Vokaler</div><canvas class="ink-canvas" aria-label="Skrivefelt: vokaler"></canvas><div class="ink-label">Konsonanter</div><canvas class="ink-canvas" aria-label="Skrivefelt: konsonanter"></canvas></article>
+          <article class="mind-node node-rhyme"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><span class="node-icon">🎤</span><h2>Finn et rimord</h2><canvas class="ink-canvas" aria-label="Skrivefelt: rimord"></canvas></article>
+          <article class="mind-node node-english"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><span class="node-icon">🌍</span><h2>Hva heter ordet på engelsk?</h2><canvas class="ink-canvas" aria-label="Skrivefelt: engelsk ord"></canvas></article>
+          <article class="mind-node node-newwords"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><span class="node-icon">🧩</span><h2>Lag nye ord av bokstavene</h2><canvas class="ink-canvas" aria-label="Skrivefelt: nye ord"></canvas></article>
+          <article class="mind-node node-synonym"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><span class="node-icon">💡</span><h2>Finn et synonym</h2><canvas class="ink-canvas" aria-label="Skrivefelt: synonym"></canvas></article>
+          <article class="mind-node node-sentence"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><span class="node-icon">✏️</span><h2>Lag en setning med ordet</h2><canvas class="ink-canvas" aria-label="Skrivefelt: setning med dagens ord"></canvas></article>
+        </div>
+      </main>
+    </section>
+
+    <section id="wordToolModule" class="word-tool-module hidden" aria-label="Egen ordaktivitet">
+      <header class="mindmap-toolbar">
+        <div><span class="mindmap-kicker">DAGENS ORD · EKSTRAUTFORDRING</span><h1 id="wordToolTitle">Ordmønster</h1></div>
+        <div class="mindmap-actions"><button class="mindmap-tool" id="closeWordTool">← Til tankekartet</button></div>
+      </header>
+      <div id="wordToolContent" class="word-tool-content"></div>
+    </section>
+  </main>
+
+  <dialog id="wordArchiveDialog" class="word-archive-dialog">
+  <div class="archive-header">
+    <div><span class="archive-kicker">DAGENS ORD</span><h2>📚 Tidligere dagens ord</h2></div>
+    <button type="button" class="archive-close" id="closeWordArchive" aria-label="Lukk">✕</button>
+  </div>
+  <p class="archive-intro">Her finner du ord du har valgt å lagre. Åpne et ord for å fortsette arbeidet.</p>
+  <div id="wordArchiveList" class="word-archive-list"></div>
+</dialog>
+
+<dialog id="teacherMenu" class="teacher-menu">
+    <form method="dialog" class="teacher-menu-header">
+      <div><p class="eyebrow">FOR LÆREREN</p><h2>Velg dagens ord</h2></div>
+      <button class="close-button" aria-label="Lukk">×</button>
+    </form>
+    <div class="teacher-menu-body">
+      <p>Skriv inn ordet elevene skal utforske i dag.</p>
+      <label for="wordSequence">Dagens ord</label>
+      <input id="wordSequence" type="text" maxlength="18" autocomplete="off" spellcheck="false" placeholder="Skriv dagens ord …">
+      <div class="letter-case-setting">
+        <label for="slotLetterCase">Bokstaver i slot-maskinen</label>
+        <select id="slotLetterCase">
+          <option value="upper">Bare STORE bokstaver</option>
+          <option value="lower">Bare små bokstaver</option>
+        </select>
+      </div>
+      <div class="teacher-menu-actions">
+        <button class="secondary-button" id="resetWordSequence" type="button">Sett inn eksempelord</button>
+        <button class="primary-button purple-button" id="saveWordSequence" type="button">Lagre dagens ord</button>
+      </div>
+      <button class="direct-mindmap-button" id="openMindmapDirect" type="button">
+        ✏️ Gå direkte til tankekartet
+      </button>
+      <p class="settings-note">Ordet lagres på denne enheten. Du kan trekke i spaken for å avsløre én bokstav om gangen, eller gå rett til tankekartet.</p>
+    </div>
+  </dialog>
+
+  <script src="ord.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
