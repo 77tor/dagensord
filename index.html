@@ -142,9 +142,30 @@
       <button class="close-button" aria-label="Lukk">×</button>
     </form>
     <div class="teacher-menu-body">
-      <p>Skriv inn ordet elevene skal utforske i dag.</p>
+      <p>Velg om dagens ord skal skrives inn direkte eller hentes fra kalenderen.</p>
+      <label for="wordSourceMode">Hvordan vil du velge dagens ord?</label>
+      <select id="wordSourceMode" class="teacher-select">
+        <option value="direct">Skriv inn ord direkte</option>
+        <option value="calendar">Bruk kalender</option>
+      </select>
+
+      <section id="directWordSettings">
       <label for="wordSequence">Dagens ord</label>
       <input id="wordSequence" type="text" maxlength="18" autocomplete="off" spellcheck="false" placeholder="Skriv dagens ord …">
+      </section>
+
+      <section id="calendarWordSettings" class="calendar-word-settings" hidden>
+        <p>Legg inn ord for i dag eller kommende dager. Ordet for dagens dato brukes automatisk når kalender er valgt.</p>
+        <label for="calendarWordDate">Dato</label>
+        <input id="calendarWordDate" type="date">
+        <label for="calendarWordInput">Ord for valgt dato</label>
+        <input id="calendarWordInput" type="text" maxlength="18" autocomplete="off" spellcheck="false" placeholder="Skriv et ord …">
+        <div class="teacher-menu-actions">
+          <button class="primary-button purple-button" id="addCalendarWord" type="button">Legg til i kalender</button>
+        </div>
+        <div id="calendarWordList" class="calendar-word-list" aria-live="polite"></div>
+      </section>
+
       <div class="letter-case-setting">
         <label for="slotLetterCase">Bokstaver i slot-maskinen</label>
         <select id="slotLetterCase">
@@ -156,6 +177,16 @@
         <button class="secondary-button" id="resetWordSequence" type="button">Sett inn eksempelord</button>
         <button class="primary-button purple-button" id="saveWordSequence" type="button">Lagre dagens ord</button>
       </div>
+      <section class="settings-transfer">
+        <h3>Flytt oppsett til en annen PC</h3>
+        <p>Last ned en fil med kalenderordene og lærerinnstillingene. På den andre PC-en åpner du Dagens ord og laster opp filen her.</p>
+        <div class="teacher-menu-actions transfer-actions">
+          <button class="secondary-button" id="exportWordSettings" type="button">⬇ Last ned oppsett</button>
+          <button class="secondary-button" id="importWordSettings" type="button">⬆ Last opp oppsett</button>
+          <input id="importWordSettingsFile" type="file" accept=".json,application/json" hidden>
+        </div>
+      </section>
+
       <button class="direct-mindmap-button" id="openMindmapDirect" type="button">
         ✏️ Gå direkte til tankekartet
       </button>

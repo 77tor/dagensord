@@ -22,6 +22,50 @@
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[char]));
 
+  const WORD_MODE_KEY = "dagens-ord-source-mode";
+  const WORD_CALENDAR_KEY = "dagens-ord-calendar";
+  const localDateKey = (date = new Date()) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  function readWordCalendar() {
+    try {
+      const data = JSON.parse(localStorage.getItem(WORD_CALENDAR_KEY) || "{}");
+      return data && typeof data === "object" && !Array.isArray(data) ? data : {};
+    } catch { return {}; }
+  }
+  function renderWordCalendar() {
+    const list = $("#calendarWordList");
+    if (!list) return;
+    const calendar = readWordCalendar();
+    const entries = Object.entries(calendar).filter(([date, word]) => /^\d{4}-\d{2}-\d{2}$/.test(date) && typeof word === "string");
+    entries.sort(([a], [b]) => a.localeCompare(b));
+    list.innerHTML = entries.length ? entries.map(([date, word]) => `
+      <div class="calendar-word-row">
+        <span><strong>${escapeHtml(new Date(`${date}T12:00:00`).toLocaleDateString("nb-NO", {day:"numeric",month:"short",year:"numeric"}))}</strong> – ${escapeHtml(word)}</span>
+        <button type="button" data-remove-calendar-date="${date}" aria-label="Fjern ord for ${date}">Fjern</button>
+      </div>`).join("") : '<div class="calendar-empty">Ingen ord er lagt inn i kalenderen ennå.</div>';
+  }
+  function getTodaysCalendarWord() {
+    return readWordCalendar()[localDateKey()] || "";
+  }
+  function setWordMode(mode) {
+    const safeMode = mode === "calendar" ? "calendar" : "direct";
+    localStorage.setItem(WORD_MODE_KEY, safeMode);
+    $("#wordSourceMode").value = safeMode;
+    $("#directWordSettings").hidden = safeMode === "calendar";
+    $("#calendarWordSettings").hidden = safeMode !== "calendar";
+    if (safeMode === "calendar") {
+      const today = localDateKey();
+      $("#calendarWordDate").value = $("#calendarWordDate").value || today;
+      const todayWord = getTodaysCalendarWord();
+      if (todayWord) $("#wordSequence").value = todayWord;
+      renderWordCalendar();
+    }
+  }
+
   function loadSequence() {
     let savedWord = "";
     try {
@@ -562,7 +606,12 @@
   $("#wordRevealCard").addEventListener("click",()=>{if(hasResult&&!isSpinning)openMindmap();});
   $("#slotResult").addEventListener("click",()=>{if(hasResult&&!isSpinning)openMindmap();});
   $("#exploreWord").addEventListener("click",()=>{if(hasResult&&!isSpinning)openMindmap();});
-  $("#openTeacherMenu").addEventListener("click",()=>$("#teacherMenu").showModal());
+  $("#openTeacherMenu").addEventListener("click",()=>{
+    setWordMode(localStorage.getItem(WORD_MODE_KEY) || "direct");
+    $("#calendarWordDate").value = $("#calendarWordDate").value || localDateKey();
+    renderWordCalendar();
+    $("#teacherMenu").showModal();
+  });
   $("#slotLetterCase").value = slotLetterCase;
   $("#slotLetterCase").addEventListener("change", event => {
     slotLetterCase = event.target.value === "lower" ? "lower" : "upper";
@@ -590,6 +639,11 @@
   }
 
   $("#openMindmapDirect").addEventListener("click",()=>{
+    if ($("#wordSourceMode").value === "calendar") {
+      const scheduledWord = getTodaysCalendarWord();
+      if (!scheduledWord) { alert("Det er ikke lagt inn noe ord for i dag i kalenderen."); return; }
+      $("#wordSequence").value = scheduledWord;
+    }
     const word=saveTeacherWord();
     if(!word) return;
     $("#teacherMenu").close();
@@ -598,25 +652,73 @@
     openMindmap();
   });
 
-  $("#saveWordSequence").addEventListener("click",()=>{
-    const word=$("#wordSequence").value.trim();
-    if(!word){alert("Skriv inn dagens ord.");return;}
-    if(/\s/.test(word)){alert("Skriv bare ett ord. Bruk bindestrek hvis ordet trenger det.");return;}
-
-    sequence=[word];
+  function activateSelectedWord(word, closeMenu = true) {
+    sequence = [word];
     currentWord = getWordData(word);
-    localStorage.setItem("dagens-ord-sequence",JSON.stringify(sequence));
-    sequenceIndex=-1;
-    localStorage.setItem("dagens-ord-index","-1");
-    $("#teacherMenu").close();
-    $("#slotMessage").textContent=`Dagens ord er «${word}». Trekk i spaken!`;
+    localStorage.setItem("dagens-ord-sequence", JSON.stringify(sequence));
+    sequenceIndex = -1;
+    localStorage.setItem("dagens-ord-index", "-1");
+    if (closeMenu) $("#teacherMenu").close();
+    $("#slotMessage").textContent = `Dagens ord er «${word}». Trekk i spaken!`;
     $("#wordRevealOverlay").classList.add("hidden");
     $("#wordRevealOverlay").classList.remove("word-reveal-show");
-    $("#exploreWord").disabled=true;
-    hasResult=false;
-    activeWord="";
-    revealedLetters=0;
-    $("#slotReels").innerHTML='<div class="slot-empty">Trekk i spaken for å starte!</div>';
+    $("#exploreWord").disabled = true;
+    hasResult = false;
+    activeWord = "";
+    revealedLetters = 0;
+    $("#slotReels").innerHTML = '<div class="slot-empty">Trekk i spaken for å starte!</div>';
+  }
+
+  $("#wordSourceMode").addEventListener("change", event => setWordMode(event.target.value));
+
+  $("#calendarWordDate").value = localDateKey();
+  $("#calendarWordDate").addEventListener("change", () => {
+    const word = readWordCalendar()[$("#calendarWordDate").value] || "";
+    $("#calendarWordInput").value = word;
+  });
+  $("#addCalendarWord").addEventListener("click", () => {
+    const date = $("#calendarWordDate").value;
+    const word = $("#calendarWordInput").value.trim();
+    if (!date) { alert("Velg en dato."); return; }
+    if (!word) { alert("Skriv inn et ord for datoen."); return; }
+    if (/\\s/.test(word)) { alert("Skriv bare ett ord. Bruk bindestrek hvis ordet trenger det."); return; }
+    const calendar = readWordCalendar();
+    calendar[date] = word;
+    localStorage.setItem(WORD_CALENDAR_KEY, JSON.stringify(calendar));
+    renderWordCalendar();
+    $("#calendarWordInput").value = "";
+    if (date === localDateKey() && localStorage.getItem(WORD_MODE_KEY) === "calendar") {
+      $("#wordSequence").value = word;
+      activateSelectedWord(word, false);
+    }
+  });
+  $("#calendarWordList").addEventListener("click", event => {
+    const button = event.target.closest("[data-remove-calendar-date]");
+    if (!button) return;
+    const date = button.dataset.removeCalendarDate;
+    const calendar = readWordCalendar();
+    delete calendar[date];
+    localStorage.setItem(WORD_CALENDAR_KEY, JSON.stringify(calendar));
+    renderWordCalendar();
+  });
+
+  $("#saveWordSequence").addEventListener("click", () => {
+    const mode = $("#wordSourceMode").value;
+    localStorage.setItem(WORD_MODE_KEY, mode);
+    if (mode === "calendar") {
+      const word = getTodaysCalendarWord();
+      if (!word) {
+        alert("Det er ikke lagt inn noe ord for i dag i kalenderen. Legg inn dagens ord eller velg direkte innskrevet ord.");
+        return;
+      }
+      $("#wordSequence").value = word;
+      activateSelectedWord(word);
+      return;
+    }
+    const word = $("#wordSequence").value.trim();
+    if (!word) { alert("Skriv inn dagens ord."); return; }
+    if (/\\s/.test(word)) { alert("Skriv bare ett ord. Bruk bindestrek hvis ordet trenger det."); return; }
+    activateSelectedWord(word);
   });
   $("#resetWordSequence").addEventListener("click",()=>{
     const exampleWord = defaultSequence[0] || "sol";
@@ -670,7 +772,104 @@
     if(!$("#wordMindmap").classList.contains("hidden"))fitCenterWord();
   });
 
+  // Eksport/import av læreroppsett slik at samme kalender og valg kan brukes på flere PC-er.
+  const TRANSFER_KEYS = [
+    "dagens-ord-source-mode",
+    "dagens-ord-calendar",
+    "dagens-ord-sequence",
+    "dagens-ord-index",
+    "dagens-ord-letter-case",
+    "dagens-ord-archive-v1"
+  ];
+
+  function exportWordSettings() {
+    const payload = {
+      format: "dagens-ord-settings",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      settings: {}
+    };
+    TRANSFER_KEYS.forEach(key => {
+      const value = localStorage.getItem(key);
+      if (value !== null) payload.settings[key] = value;
+    });
+
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `dagens-ord-oppsett-${localDateKey()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  async function importWordSettings(file) {
+    if (!file) return;
+    try {
+      const payload = JSON.parse(await file.text());
+      if (!payload || payload.format !== "dagens-ord-settings" || !payload.settings || typeof payload.settings !== "object") {
+        throw new Error("Filen ser ikke ut til å være et oppsett fra Dagens ord.");
+      }
+      const settings = payload.settings;
+      const calendarRaw = settings["dagens-ord-calendar"] ?? "{}";
+      const calendar = JSON.parse(calendarRaw);
+      if (!calendar || typeof calendar !== "object" || Array.isArray(calendar)) {
+        throw new Error("Kalenderdataene i filen er ugyldige.");
+      }
+      Object.entries(calendar).forEach(([date, word]) => {
+        if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(date) || typeof word !== "string") {
+          throw new Error("Filen inneholder en ugyldig kalenderoppføring.");
+        }
+      });
+      const mode = settings["dagens-ord-source-mode"] || "direct";
+      if (!["direct","calendar"].includes(mode)) throw new Error("Ugyldig valg av ordkilde.");
+      const letterCase = settings["dagens-ord-letter-case"] || "upper";
+      if (!["upper","lower"].includes(letterCase)) throw new Error("Ugyldig bokstavinnstilling.");
+      const savedSequence = settings["dagens-ord-sequence"] ?? "[]";
+      const sequenceData = JSON.parse(savedSequence);
+      if (!Array.isArray(sequenceData) || sequenceData.some(word => typeof word !== "string")) {
+        throw new Error("Ordlisten i filen er ugyldig.");
+      }
+      const archiveRaw = settings["dagens-ord-archive-v1"] ?? "[]";
+      const archiveData = JSON.parse(archiveRaw);
+      if (!Array.isArray(archiveData)) throw new Error("Arkivet i filen er ugyldig.");
+
+      if (!confirm("Dette erstatter kalenderen og lærerinnstillingene som ligger lagret på denne PC-en. Vil du fortsette?")) return;
+      TRANSFER_KEYS.forEach(key => {
+        if (Object.prototype.hasOwnProperty.call(settings, key)) localStorage.setItem(key, settings[key]);
+        else localStorage.removeItem(key);
+      });
+      alert("Oppsettet er lastet inn. Siden lastes nå inn på nytt.");
+      location.reload();
+    } catch (error) {
+      alert(error.message || "Kunne ikke lese oppsettfilen.");
+    }
+  }
+
+  $("#exportWordSettings").addEventListener("click", exportWordSettings);
+  $("#importWordSettings").addEventListener("click", () => $("#importWordSettingsFile").click());
+  $("#importWordSettingsFile").addEventListener("change", event => {
+    const file = event.target.files && event.target.files[0];
+    importWordSettings(file);
+    event.target.value = "";
+  });
+
   loadSequence();
+  const savedWordMode = localStorage.getItem(WORD_MODE_KEY) || "direct";
+  $("#wordSourceMode").value = savedWordMode;
+  $("#directWordSettings").hidden = false;
+  $("#calendarWordSettings").hidden = true;
+  if (savedWordMode === "calendar") {
+    const scheduledToday = getTodaysCalendarWord();
+    if (scheduledToday) {
+      sequence = [scheduledToday];
+      currentWord = getWordData(scheduledToday);
+      $("#wordSequence").value = scheduledToday;
+    }
+  }
+  renderWordCalendar();
   [$("#reelOne"),$("#reelTwo"),$("#reelThree")].forEach(reel=>reel.textContent="?");
 
   // Spaken aktiveres av spinSlot(); klassen beholdes gjennom hele snurringen.

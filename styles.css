@@ -6989,3 +6989,32 @@ body.mindmap-open main{
   line-height: 1.2 !important;
   font-weight: 900 !important;
 }
+
+
+/* Overføring av læreroppsett mellom enheter */
+.settings-transfer {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid #d9cff8;
+  border-radius: 14px;
+  background: #f8f5ff;
+}
+.settings-transfer h3 {
+  margin: 0 0 6px;
+  color: #51408d;
+  font-size: 1rem;
+}
+.settings-transfer p {
+  margin: 0 0 10px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+.transfer-actions {
+  justify-content: flex-start;
+  gap: 8px;
+}
+.transfer-actions button {
+  min-height: 42px;
+  padding: 9px 14px;
+  font-size: 0.9rem;
+}
