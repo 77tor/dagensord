@@ -243,6 +243,8 @@
       event.stopPropagation();
       const node = button.closest(".mind-node");
       if (!node) return;
+      const heading = node.querySelector("h2")?.textContent?.trim() || "denne oppgaven";
+      if (!window.confirm(`Vil du tømme alt innhold i «${heading}»? Dette kan ikke angres.`)) return;
       node.querySelectorAll(".ink-canvas").forEach(canvas => {
         const context = canvas.getContext("2d");
         context.save();
@@ -257,21 +259,25 @@
     });
   });
 
+  // Lagre/lukk avslutter fokusvisningen uten å fjerne innholdet.
+  document.querySelectorAll(".save-close-node-button").forEach(button => {
+    button.addEventListener("click", event => {
+      event.stopPropagation();
+      clearTaskFocus();
+    });
+  });
+
   function setTaskFocus(node) {
     const board = $("#mindmapBoard");
     if (!node || node.classList.contains("node-center")) return;
     board.classList.add("task-focus-mode");
     board.querySelectorAll(".mind-node").forEach(item => item.classList.toggle("is-focused", item === node));
-    $("#exitTaskFocus").classList.add("visible");
-    const heading = node.querySelector("h2")?.textContent || "oppgaven";
-    $("#exitTaskFocus").setAttribute("aria-label", `Til hele tankekartet fra ${heading}`);
   }
 
   function clearTaskFocus() {
     const board = $("#mindmapBoard");
     board.classList.remove("task-focus-mode");
     board.querySelectorAll(".mind-node").forEach(item => item.classList.remove("is-focused"));
-    $("#exitTaskFocus").classList.remove("visible");
   }
 
   const WORD_ARCHIVE_KEY = "dagens-ord-archive-v1";
@@ -622,7 +628,6 @@
     const node = icon.closest(".mind-node");
     if (node && !node.classList.contains("node-center")) setTaskFocus(node);
   });
-  $("#exitTaskFocus").addEventListener("click", clearTaskFocus);
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && $("#mindmapBoard").classList.contains("task-focus-mode")) clearTaskFocus();
   });

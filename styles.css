@@ -6493,3 +6493,45 @@ body.mindmap-open main{
     font-size:clamp(28px,7cqh,64px)!important;
   }
 }
+
+
+/* v90 – lagre/lukk ved siden av tøm-knappen i fokusvisning */
+#wordMindmap .save-close-node-button{
+  display:none;
+}
+#wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .clear-node-button{
+  right:112px!important;
+}
+#wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .save-close-node-button{
+  position:absolute!important;
+  top:8px!important;
+  right:9px!important;
+  z-index:6!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:25px!important;
+  padding:4px 9px!important;
+  border:1px solid #b9a9e8!important;
+  border-radius:8px!important;
+  background:linear-gradient(135deg,#7655c8,#9274df)!important;
+  color:#fff!important;
+  font:800 10px var(--font-current)!important;
+  cursor:pointer!important;
+  box-shadow:0 2px 6px #46327b20!important;
+}
+#wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .save-close-node-button:hover{
+  filter:brightness(1.06);
+  transform:translateY(-1px);
+}
+@media(max-width:700px){
+  #wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .clear-node-button{
+    right:100px!important;
+  }
+  #wordMindmap .mindmap-board.task-focus-mode .mind-node.is-focused .save-close-node-button{
+    top:5px!important;
+    right:5px!important;
+    padding:3px 7px!important;
+    font-size:9px!important;
+  }
+}
