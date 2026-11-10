@@ -6,7 +6,9 @@
   <meta name="theme-color" content="#f4f1ff">
   <title>Dagens ord</title>
   <link rel="icon" type="image/svg+xml" href="assets/dagens-ord-ikon.svg">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/slot-machine.css">
+  <link rel="stylesheet" href="css/mindmap.css">
 </head>
 <body class="daily-word-site">
   <header class="word-topbar">
@@ -101,19 +103,27 @@
       </aside>
       <main class="mindmap-main">
         <div class="mindmap-board" id="mindmapBoard">
-          <article class="mind-node node-count-syllables"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button>
+          <article class="mind-node node-count-syllables"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button>
             <div class="node-heading"><span class="node-icon">🔤👏</span><h2>Bokstaver og stavelser</h2></div>
             <div class="mini-writing-task"><span class="ink-label">Hvor mange bokstaver?</span><canvas class="ink-canvas" aria-label="Skrivefelt: antall bokstaver"></canvas></div>
             <div class="mini-writing-task"><span class="ink-label">Hvor mange stavelser?</span><canvas class="ink-canvas" aria-label="Skrivefelt: antall stavelser"></canvas></div>
           </article>
-          <article class="mind-node node-vowel"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><span class="node-icon">🎵</span><h2>Kort eller lang vokallyd?</h2><canvas class="ink-canvas" aria-label="Skrivefelt: vokallyd"></canvas></article>
+          <article class="mind-node node-vowel"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><div class="node-heading"><span class="node-icon">🎵</span><h2>Kort eller lang vokallyd?</h2></div><canvas class="ink-canvas" aria-label="Skrivefelt: vokallyd"></canvas></article>
           <article class="mind-node node-center"><div id="mindmapCenterWord" class="mindmap-word-display" role="heading" aria-level="2" aria-label="Dagens ord"></div></article>
-          <article class="mind-node node-letters"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><div class="node-heading"><span class="node-icon">🟠🔵</span><h2>Vokaler og konsonanter</h2></div><div class="mini-writing-task"><span class="ink-label">Vokaler</span><canvas class="ink-canvas" aria-label="Skrivefelt: vokaler"></canvas></div><div class="mini-writing-task"><span class="ink-label">Konsonanter</span><canvas class="ink-canvas" aria-label="Skrivefelt: konsonanter"></canvas></div></article>
-          <article class="mind-node node-rhyme"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><span class="node-icon">🎤</span><h2>Finn et rimord</h2><canvas class="ink-canvas" aria-label="Skrivefelt: rimord"></canvas></article>
-          <article class="mind-node node-english"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><span class="node-icon">🌍</span><h2>Hva heter ordet på engelsk?</h2><canvas class="ink-canvas" aria-label="Skrivefelt: engelsk ord"></canvas></article>
-          <article class="mind-node node-newwords"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><span class="node-icon">🧩</span><h2>Lag nye ord av bokstavene</h2><canvas class="ink-canvas" aria-label="Skrivefelt: nye ord"></canvas></article>
-          <article class="mind-node node-synonym"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><span class="node-icon">💡</span><h2>Finn et synonym</h2><canvas class="ink-canvas" aria-label="Skrivefelt: synonym"></canvas></article>
-          <article class="mind-node node-sentence"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm innhold</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><span class="node-icon">✏️</span><h2>Lag en setning med ordet</h2><canvas class="ink-canvas" aria-label="Skrivefelt: setning med dagens ord"></canvas></article>
+          <article class="mind-node node-letters"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><div class="node-heading"><span class="node-icon">🟠🔵</span><h2>Vokaler og konsonanter</h2></div><div class="mini-writing-task"><span class="ink-label label-vowels">Vokaler</span><canvas class="ink-canvas" aria-label="Skrivefelt: vokaler"></canvas></div><div class="mini-writing-task"><span class="ink-label label-consonants">Konsonanter</span><canvas class="ink-canvas" aria-label="Skrivefelt: konsonanter"></canvas></div></article>
+          <article class="mind-node node-rhyme"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><div class="node-heading"><span class="node-icon">🎤</span><h2>Finn et rimord</h2></div><canvas class="ink-canvas" aria-label="Skrivefelt: rimord"></canvas></article>
+          <article class="mind-node node-english"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><div class="node-heading"><span class="node-icon">
+    <svg viewBox="0 0 60 36" width="36" height="24" role="img" aria-label="Britisk flagg">
+        <rect width="60" height="36" fill="#012169"/>
+        <path d="M0 0 L60 36 M60 0 L0 36" stroke="#fff" stroke-width="8"/>
+        <path d="M0 0 L60 36 M60 0 L0 36" stroke="#C8102E" stroke-width="3.5"/>
+        <path d="M30 0 V36 M0 18 H60" stroke="#fff" stroke-width="12"/>
+        <path d="M30 0 V36 M0 18 H60" stroke="#C8102E" stroke-width="7"/>
+    </svg>
+</span><h2>Hva heter ordet på engelsk?</h2></div><canvas class="ink-canvas" aria-label="Skrivefelt: engelsk ord"></canvas></article>
+          <article class="mind-node node-newwords"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><div class="node-heading"><span class="node-icon">🧩</span><h2>Lag nye ord av bokstavene</h2></div><canvas class="ink-canvas" aria-label="Skrivefelt: nye ord"></canvas></article>
+          <article class="mind-node node-synonym"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><div class="node-heading"><span class="node-icon">💡</span><h2>Finn et synonym</h2></div><canvas class="ink-canvas" aria-label="Skrivefelt: synonym"></canvas></article>
+          <article class="mind-node node-sentence"><button type="button" class="clear-node-button" title="Tøm innholdet i denne boksen" aria-label="Tøm innholdet i denne boksen">↻ <span>Tøm</span></button><button type="button" class="save-close-node-button" title="Lagre og gå tilbake til hele tankekartet">Lagre/lukk</button><div class="node-heading"><span class="node-icon">✏️</span><h2>Lag en setning med ordet</h2></div><canvas class="ink-canvas" aria-label="Skrivefelt: setning med dagens ord"></canvas></article>
         </div>
       </main>
     </section>
@@ -127,7 +137,11 @@
     </section>
   </main>
 
-  <dialog id="wordArchiveDialog" class="word-archive-dialog">
+  <section id="wordPictureOverlay" class="word-picture-overlay hidden" aria-label="Bilde av dagens ord" aria-live="polite">
+    <div id="wordPictureSymbol" class="word-picture-symbol" role="img" aria-label="Bilde av dagens ord"></div>
+  </section>
+
+<dialog id="wordArchiveDialog" class="word-archive-dialog">
   <div class="archive-header">
     <div><span class="archive-kicker">DAGENS ORD</span><h2>📚 Tidligere dagens ord</h2></div>
     <button type="button" class="archive-close" id="closeWordArchive" aria-label="Lukk">✕</button>
@@ -195,6 +209,7 @@
   </dialog>
 
   <script src="ord.js"></script>
+  <script src="bilder.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

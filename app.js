@@ -219,6 +219,95 @@
   function setupInkCanvas(canvas) {
     if (canvas.dataset.ready === "true") return;
     canvas.dataset.ready = "true";
+
+    // Tastaturfeltet legges over skriveflaten, men endrer ikke størrelsen på den.
+    let workspace = canvas.parentElement;
+    if (canvas.closest("#mindmapBoard") && !workspace.classList.contains("ink-workspace")) {
+      workspace = document.createElement("div");
+      workspace.className = "ink-workspace";
+      canvas.parentNode.insertBefore(workspace, canvas);
+      workspace.appendChild(canvas);
+
+      const textInput = document.createElement("textarea");
+      textInput.className = "ink-text-input";
+      textInput.setAttribute("aria-label", canvas.getAttribute("aria-label") || "Skrivefelt");
+      textInput.placeholder = "Skriv svaret her …";
+      textInput.spellcheck = true;
+
+      const node = canvas.closest(".mind-node");
+      if (node && !node.querySelector(":scope > .node-heading")) {
+        const icon = node.querySelector(":scope > .node-icon");
+        const heading = node.querySelector(":scope > h2");
+        if (icon && heading) {
+          const header = document.createElement("div");
+          header.className = "node-heading";
+          node.insertBefore(header, icon);
+          header.append(icon, heading);
+        }
+      }
+      let actionGroup = node?.querySelector(".node-writing-actions");
+      if (node && !actionGroup) {
+        actionGroup = document.createElement("div");
+        actionGroup.className = "node-writing-actions";
+        const clearButton = node.querySelector(".clear-node-button");
+        if (clearButton) {
+          clearButton.parentNode.insertBefore(actionGroup, clearButton);
+          actionGroup.appendChild(clearButton);
+        } else {
+          node.insertBefore(actionGroup, node.firstChild);
+        }
+      }
+
+      const keyboardButton = document.createElement("button");
+      keyboardButton.type = "button";
+      keyboardButton.className = "ink-mode-toggle";
+      keyboardButton.title = "Bytt til tastaturskriving";
+      keyboardButton.setAttribute("aria-label", "Bytt til tastaturskriving");
+      keyboardButton.innerHTML = '<span aria-hidden="true">⌨️</span>';
+      keyboardButton.addEventListener("click", event => {
+        event.stopPropagation();
+        const useKeyboard = !workspace.classList.contains("keyboard-mode");
+        workspace.classList.toggle("keyboard-mode", useKeyboard);
+        keyboardButton.innerHTML = useKeyboard
+          ? '<span aria-hidden="true">✍️</span>'
+          : '<span aria-hidden="true">⌨️</span>';
+        keyboardButton.title = useKeyboard ? "Bytt til digital penn" : "Bytt til tastaturskriving";
+        keyboardButton.setAttribute("aria-label", keyboardButton.title);
+        if (useKeyboard) requestAnimationFrame(() => textInput.focus());
+      });
+      textInput.addEventListener("click", event => event.stopPropagation());
+      textInput.addEventListener("pointerdown", event => event.stopPropagation());
+      // Knytt knappen eksplisitt til akkurat dette skrivefeltet.
+      keyboardButton._inkWorkspace = workspace;
+      actionGroup?.appendChild(keyboardButton);
+
+      // Samle alle tre knappene i én felles flex-rad.
+      // Da kan ikke «Lagre/lukk» overlappe «Tøm innhold» eller tastatur/penn.
+      // Knappen kan ligge inne i .node-heading eller en annen wrapper.
+      // Søk derfor i hele oppgaveboksen, ikke bare blant direkte barn.
+      const saveCloseButton = node?.querySelector(".save-close-node-button");
+      if (actionGroup && saveCloseButton && saveCloseButton.parentElement !== actionGroup) {
+        actionGroup.appendChild(saveCloseButton);
+      }
+
+      // Ved bokser med flere skrivefelt kan CSS vise feltene i en annen
+      // rekkefølge enn HTML. Sorter derfor penn/tastatur-knappene etter
+      // den faktiske plasseringen til skrivefeltene fra venstre mot høyre.
+      requestAnimationFrame(() => {
+        if (!actionGroup?.isConnected) return;
+        const toggles = [...actionGroup.querySelectorAll(":scope > .ink-mode-toggle")];
+        toggles.sort((a, b) => {
+          const ax = a._inkWorkspace?.getBoundingClientRect().left ?? 0;
+          const bx = b._inkWorkspace?.getBoundingClientRect().left ?? 0;
+          return ax - bx;
+        });
+        const closeButton = actionGroup.querySelector(":scope > .save-close-node-button");
+        toggles.forEach(button => actionGroup.insertBefore(button, closeButton || null));
+      });
+
+      workspace.appendChild(textInput);
+    }
+
     const context = canvas.getContext("2d");
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -335,10 +424,14 @@
 
   function captureMindmapPage() {
     const word = ($("#mindmapCenterWord").textContent || activeWord || currentWord.ord || "").trim();
-    const drawings = [...$("#mindmapBoard").querySelectorAll(".ink-canvas")].map((canvas,index) => ({
+    const canvases = [...$("#mindmapBoard").querySelectorAll(".ink-canvas")];
+    const drawings = canvases.map((canvas,index) => ({
       index, image: canvas.toDataURL("image/png")
     }));
-    return { word, drawings, savedAt: new Date().toISOString() };
+    const typedAnswers = canvases.map((canvas,index) => ({
+      index, text: canvas.parentElement?.querySelector(".ink-text-input")?.value || ""
+    }));
+    return { word, drawings, typedAnswers, savedAt: new Date().toISOString() };
   }
 
   function saveMindmapPage() {
@@ -414,6 +507,9 @@
       const canvases = $("#mindmapBoard").querySelectorAll(".ink-canvas");
       canvases.forEach((canvas,index) => {
         setupInkCanvas(canvas);
+        const savedText = item.typedAnswers?.find(entry => entry.index === index)?.text || "";
+        const textInput = canvas.parentElement?.querySelector(".ink-text-input");
+        if (textInput) textInput.value = savedText;
         const drawing = item.drawings?.find(entry => entry.index === index);
         if (!drawing?.image) return;
         const img = new Image();
@@ -602,10 +698,61 @@
     });
   }
 
+
+  // Bildeglimt mellom slot-maskinen og tankekartet.
+  let pictureRevealTimer = null;
+  let pictureRevealInProgress = false;
+
+  function finishPictureReveal() {
+    if (pictureRevealTimer) {
+      window.clearTimeout(pictureRevealTimer);
+      pictureRevealTimer = null;
+    }
+    const overlay = $("#wordPictureOverlay");
+    overlay?.classList.remove("is-visible");
+    if (overlay) overlay.classList.add("hidden");
+    pictureRevealInProgress = false;
+    openMindmap();
+  }
+
+  function openWordWithPicture() {
+    if (!hasResult || isSpinning || pictureRevealInProgress) return;
+
+    const word = (activeWord || currentWord.ord || "").trim();
+    const imageEntry = (window.DAGENS_ORD_BILDER || []).find(
+      item => item && typeof item.ord === "string" &&
+        item.ord.trim().toLocaleLowerCase("nb-NO") === word.toLocaleLowerCase("nb-NO") &&
+        typeof item.symbol === "string" && item.symbol.trim()
+    );
+
+    // Mangler ordet i bildelista, går vi rett til tankekartet.
+    if (!imageEntry) {
+      openMindmap();
+      return;
+    }
+
+    const overlay = $("#wordPictureOverlay");
+    const picture = $("#wordPictureSymbol");
+    if (!overlay || !picture) {
+      openMindmap();
+      return;
+    }
+
+    pictureRevealInProgress = true;
+    picture.textContent = imageEntry.symbol;
+    overlay.classList.remove("hidden");
+    overlay.classList.remove("is-visible");
+    void overlay.offsetWidth;
+    overlay.classList.add("is-visible");
+
+    // Ikonet zoomer fra lite til svært stort i ca. tre sekunder før tankekartet åpnes.
+    pictureRevealTimer = window.setTimeout(finishPictureReveal, 3000);
+  }
+
   $("#pullLever").addEventListener("click",spinSlot);
-  $("#wordRevealCard").addEventListener("click",()=>{if(hasResult&&!isSpinning)openMindmap();});
-  $("#slotResult").addEventListener("click",()=>{if(hasResult&&!isSpinning)openMindmap();});
-  $("#exploreWord").addEventListener("click",()=>{if(hasResult&&!isSpinning)openMindmap();});
+  $("#wordRevealCard").addEventListener("click",openWordWithPicture);
+  $("#slotResult").addEventListener("click",openWordWithPicture);
+  $("#exploreWord").addEventListener("click",openWordWithPicture);
   $("#openTeacherMenu").addEventListener("click",()=>{
     setWordMode(localStorage.getItem(WORD_MODE_KEY) || "direct");
     $("#calendarWordDate").value = $("#calendarWordDate").value || localDateKey();
@@ -746,6 +893,11 @@
   $("#closeWordArchive").addEventListener("click",()=>$("#wordArchiveDialog").close());
 
   $("#backToSlot").addEventListener("click",()=>{
+    if (pictureRevealTimer) window.clearTimeout(pictureRevealTimer);
+    pictureRevealTimer = null;
+    pictureRevealInProgress = false;
+    $("#wordPictureOverlay")?.classList.add("hidden");
+    $("#wordPictureOverlay")?.classList.remove("is-visible");
     $("#wordRevealOverlay").classList.add("hidden");
     $("#wordRevealOverlay").classList.remove("word-reveal-show");
     $("#wordMindmap").classList.add("hidden");
